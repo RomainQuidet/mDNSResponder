@@ -54,10 +54,15 @@ COREDIR = ../mDNSCore
 SHAREDDIR ?= ../mDNSShared
 JDK = /usr/jdk
 
-CC = @cc
+GNU_INSTALL_ROOT := /home/romain/DragonBoard/Linux/gcc-linaro-5.1-2015.08-x86_64_aarch64-linux-gnu/bin
+GNU_PREFIX := aarch64-linux-gnu
+
+#CC = @cc
+export CC = '$(GNU_INSTALL_ROOT)/$(GNU_PREFIX)-gcc'
 BISON = @bison
 FLEX = @flex
-LD = ld -shared
+#LD = ld -shared
+LD = '$(GNU_INSTALL_ROOT)/$(GNU_PREFIX)-ld'
 CP = cp
 RM = rm
 LN = ln -s -f
@@ -82,7 +87,7 @@ else
 CFLAGS_DEBUG = -Os -DMDNS_DEBUGMSGS=0 
 OBJDIR ?= objects/prod
 BUILDDIR ?= build/prod
-STRIP = strip -S 
+STRIP = '$(GNU_INSTALL_ROOT)/$(GNU_PREFIX)-strip' -S 
 endif
 
 # Configure per-OS peculiarities
@@ -102,7 +107,7 @@ else
 # any target that contains the string "linux"
 ifeq ($(findstring linux,$(os)),linux)
 CFLAGS_OS = -D_GNU_SOURCE -DHAVE_IPV6 -DNOT_HAVE_SA_LEN -DUSES_NETLINK -DHAVE_LINUX -DTARGET_OS_LINUX -fno-strict-aliasing
-LD = gcc -shared
+LD = '$(GNU_INSTALL_ROOT)/$(GNU_PREFIX)-ld' -shared
 FLEXFLAGS_OS = -l
 JAVACFLAGS_OS += -I$(JDK)/include/linux
 
